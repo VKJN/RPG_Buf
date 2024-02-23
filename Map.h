@@ -28,5 +28,6 @@ private:
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} };
 public:
 	Map(int width, int height);
+	int getElementByPosition(int x, int y);
 	void draw(sf::RenderWindow& window);
 };

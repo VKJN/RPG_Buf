@@ -9,12 +9,14 @@ private:
 	Map map;
 	Player player;
 
+	int playerMoveDirection = 0;
+	const sf::Time TimePerFrame = sf::seconds(1.f / 6.f); // 6.f or 10.f
+
 	void processEvents();
-	void update();
+	void update(sf::Time deltaTime);
 	void render();
 
-	int playerMoveDirection = 0;
-	const sf::Time TimePerFrame = sf::seconds(1.f / 10.f);
+	bool ActiveInventory = false;
 
 public:
 	Game();

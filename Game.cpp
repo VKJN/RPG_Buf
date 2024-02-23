@@ -3,7 +3,7 @@
 
 Game::Game()
 	: window(sf::VideoMode(960, 640), "RPG game"),
-	player(),
+	player(sf::Vector2f(9 * 32, 6 * 32)),
 	map(960, 640)
 {
 
@@ -15,6 +15,7 @@ void Game::processEvents() {
 		if (event.type == sf::Event::Closed) {
 			window.close();
 		}
+		
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 			playerMoveDirection = 1;
 		}
@@ -31,34 +32,61 @@ void Game::processEvents() {
 			playerMoveDirection = 4;
 		}
 
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
+			ActiveInventory = true;
+		}
+
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+			ActiveInventory = false;
+		}
+
 		else {
 			playerMoveDirection = 0;
 		}
 	}
 }
 
-void Game::update() {
-	switch (playerMoveDirection) {
-	case 1:
-		player.move(1);
-		break;
-	case 2:
-		player.move(2);
-		break;
-	case 3:
-		player.move(3);
-		break;
-	case 4:
-		player.move(4);
-		break;
+void Game::update(sf::Time deltaTime) {
+	if (!ActiveInventory) {
+		sf::Vector2f pPos = player.getPosition();
+
+		switch (playerMoveDirection) {
+		case 1:
+			if (map.getElementByPosition(pPos.x / 32, (pPos.y - 32) / 32) == 1)
+			player.setTexture("./Image/Player_3.png");
+			player.move(1);
+			break;
+		case 2:
+			if (map.getElementByPosition((pPos.x + 32) / 32, pPos.y / 32) == 1)
+			player.setTexture("./Image/Player.png");
+			player.move(2);
+			break;
+		case 3:
+			if (map.getElementByPosition(pPos.x / 32, (pPos.y + 32) / 32) == 1)
+			player.setTexture("./Image/Player_4.png");
+			player.move(3);
+			break;
+		case 4:
+			if (map.getElementByPosition((pPos.x - 32) / 32, pPos.y / 32) == 1)
+			player.setTexture("./Image/Player_2.png");
+			player.move(4);
+			break;
+		}
+
+		Sleep(deltaTime.asSeconds());
 	}
-	Sleep(TimePerFrame.asSeconds());
 }
 
 void Game::render() {
+
 	window.clear();
 	map.draw(window);
 	player.draw(window);
+
+	if (ActiveInventory) {
+		player.drawInventory(window); 
+	}
+
 	window.display();
 }
 
@@ -73,7 +101,7 @@ void Game::run() {
 		while (timeSinceLastUpdate > TimePerFrame) {
 			timeSinceLastUpdate -= TimePerFrame;
 			processEvents();
-			update();
+			update(TimePerFrame);
 		}
 
 		render();

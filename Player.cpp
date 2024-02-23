@@ -1,14 +1,20 @@
 #include "Player.h"
+#include "Map.h"
 #include <iostream>
 
-Player::Player() {
+Player::Player(sf::Vector2f startPosition) {
 
-	if (!texture.loadFromFile("./Image/Player.png")) std::cout << "texture not load";
-	
-	player.setTexture(&texture);
+	if (!playerTexture.loadFromFile("./Image/Player.png")) std::cout << "texture not load";
+	if (!inventoryTexture.loadFromFile("./Image/inventory.png")) std::cout << "texture not load";
+
+	player.setTexture(&playerTexture);
+	inventory.setTexture(&inventoryTexture);
+
+	inventory.setSize(sf::Vector2f(256.f, 64.f));
+	inventory.setPosition(340, 400);
 
 	player.setSize(sf::Vector2f(32.f, 32.f));
-	player.setPosition(sf::Vector2f(9 * 32, 6 * 32));
+	player.setPosition(startPosition);
 }
 
 void Player::move(int direction) {
@@ -31,4 +37,17 @@ void Player::move(int direction) {
 
 void Player::draw(sf::RenderWindow& window) {
 	window.draw(player);
+}
+
+void Player::drawInventory(sf::RenderWindow& window) {
+	window.draw(inventory);
+}
+
+void Player::setTexture(std::string path) {
+	if (!playerTexture.loadFromFile(path)) std::cout << "texture not load";
+	player.setTexture(&playerTexture);
+}
+
+sf::Vector2f Player::getPosition() {
+	return player.getPosition();
 }
